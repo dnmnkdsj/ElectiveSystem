@@ -1,25 +1,25 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const LOGIN = "LOGIN";
-const LOGOUT = "LOGOUT";
-const userKey = "user";
+const LOGIN = 'LOGIN';
+const LOGOUT = 'LOGOUT';
+const userKey = 'user';
 
-const searchHistory = store => {
+const searchHistory = (store) => {
   let user = localStorage.getItem(userKey);
   if (user) {
     user = JSON.parse(user);
-    store.dispatch("login", user);
+    store.dispatch('login', user);
   }
 };
 
 export default new Vuex.Store({
-  strict: process.env.NODE_ENV !== "production",
+  strict: process.env.NODE_ENV !== 'production',
   state: {
     user: null,
-    chatObject: null
+    chatObject: null,
   },
   mutations: {
     [LOGIN](state, payload) {
@@ -30,7 +30,7 @@ export default new Vuex.Store({
     [LOGOUT](state) {
       state.user = null;
       localStorage.removeItem(userKey);
-    }
+    },
   },
   actions: {
     login({ commit }, payload) {
@@ -38,11 +38,11 @@ export default new Vuex.Store({
     },
     logout({ commit }) {
       commit(LOGOUT);
-    }
+    },
   },
   getters: {
-    user: state => state.user
+    user: state => state.user,
   },
 
-  plugins: [searchHistory]
+  plugins: [searchHistory],
 });
