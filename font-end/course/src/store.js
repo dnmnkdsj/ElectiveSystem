@@ -1,14 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import { storeKey, storeType } from './variable';
+
 Vue.use(Vuex);
 
-const LOGIN = 'LOGIN';
-const LOGOUT = 'LOGOUT';
-const userKey = 'user';
-
 const searchHistory = (store) => {
-  let user = localStorage.getItem(userKey);
+  let user = localStorage.getItem(storeKey.userKey);
   if (user) {
     user = JSON.parse(user);
     store.dispatch('login', user);
@@ -22,22 +20,22 @@ export default new Vuex.Store({
     chatObject: null,
   },
   mutations: {
-    [LOGIN](state, payload) {
+    [storeType.LOGIN](state, payload) {
       const user = JSON.stringify(payload);
-      localStorage.setItem(userKey, user);
+      localStorage.setItem(storeKey.userKey, user);
       state.user = payload;
     },
-    [LOGOUT](state) {
+    [storeType.LOGOUT](state) {
       state.user = null;
-      localStorage.removeItem(userKey);
+      localStorage.removeItem(storeKey.userKey);
     },
   },
   actions: {
     login({ commit }, payload) {
-      commit(LOGIN, payload);
+      commit(storeType.LOGIN, payload);
     },
     logout({ commit }) {
-      commit(LOGOUT);
+      commit(storeType.LOGOUT);
     },
   },
   getters: {
