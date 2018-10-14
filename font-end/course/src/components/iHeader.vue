@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <el-row tag="header">
     <el-col :xs="24" :sm="4">
       <h1 class="title"><i class="el-icon-star-off"></i>选课系统</h1>
     </el-col>
