@@ -73,9 +73,21 @@
 <el-dialog title="课程详情" :visible.sync="dialogTableVisible">
   <div class="course-detail">
     <div class="detail-item">
+      <ul>
+        <li>课程名称：{{courseDetail.name}}</li>
+        <li>学分：{{courseDetail.credit}}</li>
+        <li>授课老师：{{courseDetail.teacher}}</li>
+        <li>课程类型：{{courseDetail.type}}</li>
+      </ul>
+      <ul>
+         <li>备注：{{courseDetail.teacher}}</li>
+        <li>时间：{{courseDetail.time}}</li>
+        <li>地址：{{courseDetail.location}}</li>
+        <li>人数/容量：{{courseDetail.num_join+' / '+courseDetail.limit}}</li>
+      </ul>
     </div>
-    <el-button type="danger"> 删除 </el-button>
   </div>
+  <el-button type="danger"> 删除 </el-button>
   <el-table :data="studentsData">
     <el-table-column property="name" label="姓名" ></el-table-column>
     <el-table-column property="id" label="学号" ></el-table-column>
@@ -110,6 +122,17 @@
   flex-direction: column;
   align-items: center;
 
+}
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  ul {
+    width: 50%;
+    li {
+      font-size:15px;
+      line-height: 1.5em;
+    }
+  }
 }
 
 
