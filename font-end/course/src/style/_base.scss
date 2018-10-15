@@ -1,0 +1,19 @@
+
+// 不换行
+@mixin no-wrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@mixin wrap {
+  word-break: break-all; 
+  word-wrap: break-word; 
+}
+
+@mixin img-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
