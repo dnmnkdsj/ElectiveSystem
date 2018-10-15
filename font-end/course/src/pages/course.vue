@@ -1,6 +1,6 @@
 <template>
   <el-card class="wrap">
-    <router-view></router-view>
+    <router-view ></router-view>
   </el-card>
 </template>
 
@@ -18,6 +18,7 @@
 
 <script>
 export default {
-
+  methods: {
+  },
 };
 </script>

@@ -57,8 +57,8 @@
       </el-table-column>
       <el-table-column label="选课">
         <template slot-scope="scope">
-          <el-button size="mini" :type="deleteAble?'danger':'success'">
-            {{deleteAble?'删除':'选课'}}
+          <el-button size="mini" :type="checkAble?'info':'success'" @click="onClick(scope.$index, scope.row)">
+            {{checkAble?'查看详情':'选课'}}
             </el-button>
         </template>
       </el-table-column>
@@ -70,6 +70,25 @@
   :total="100"
   class="pagination">
 </el-pagination>
+<el-dialog title="课程详情" :visible.sync="dialogTableVisible">
+  <div class="course-detail">
+    <div class="detail-item">
+    </div>
+    <el-button type="danger"> 删除 </el-button>
+  </div>
+  <el-table :data="studentsData">
+    <el-table-column property="name" label="姓名" ></el-table-column>
+    <el-table-column property="id" label="学号" ></el-table-column>
+    <el-table-column property="class" label="学院班级"></el-table-column>
+    <el-table-column label="课程评定">
+        <template slot-scope="scope">
+          <el-button size="mini" type="success" @click="handle(scope.$index, scope.row)">
+            通过
+          </el-button>
+        </template>
+      </el-table-column>
+  </el-table>
+</el-dialog>
   </div>
 </template>
 
@@ -106,12 +125,13 @@ export default {
     //   type: Array,
     //   default: null,
     // },
-    deleteAble: {
+    checkAble: {
       type: Boolean,
       default: false,
     },
   },
   data: () => ({
+    dialogTableVisible: false,
     tableData: [{
       name: '聆听音乐',
       credit: 2,
@@ -126,6 +146,25 @@ export default {
     }],
     locationOptions,
     location: '',
+    courseDetail: {
+      name: '聆听音乐',
+      credit: 2,
+      teacher: '111',
+      type: 'test',
+      addition: '1111111111111111111111111111111111111',
+      time: '周四',
+      location: '东九楼',
+      limit: 1222,
+      num_join: 99,
+    },
   }),
+  methods: {
+    onClick(index, row) {
+      console.log(index, row);
+      if (this.checkAble) {
+        this.dialogTableVisible = true;
+      }
+    },
+  },
 };
 </script>
