@@ -7,7 +7,11 @@
 
 
 <script>
-export default {
+import CourseList from '../components/courseList.vue';
 
+export default {
+  components: {
+    CourseList,
+  },
 };
 </script>

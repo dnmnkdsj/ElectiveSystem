@@ -41,11 +41,11 @@ export default new Router({
           component: CourseList,
         },
         {
-          path: '/selected',
+          path: 'selected',
           component: SelectedList,
         },
         {
-          path: '/finished',
+          path: 'finished',
           component: FinishedList,
         },
       ],

@@ -17,7 +17,7 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     user: null,
-    chatObject: null,
+    courseState: -1,
   },
   mutations: {
     [storeType.LOGIN](state, payload) {
@@ -29,6 +29,9 @@ export default new Vuex.Store({
       state.user = null;
       localStorage.removeItem(storeKey.userKey);
     },
+    [storeType.CHANGE_STATE](state, newState) {
+      state.courseState = newState;
+    },
   },
   actions: {
     login({ commit }, payload) {
@@ -37,9 +40,13 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit(storeType.LOGOUT);
     },
+    changeState({ commit }, newState) {
+      commit(storeType.CHANGE_STATE, newState);
+    },
   },
   getters: {
     user: state => state.user,
+    courseState: state => state.courseState,
   },
 
   plugins: [searchHistory],
