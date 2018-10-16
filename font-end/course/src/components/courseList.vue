@@ -9,8 +9,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="时间">
-        <el-select v-model="location" placeholder="选择上课时间">
-          <el-option v-for="(item,index) in locationOptions"
+        <el-select v-model="time" placeholder="选择上课时间">
+          <el-option v-for="(item,index) in timeOptions"
           :key="item" :label="item" :value="index">
           </el-option>
         </el-select>
@@ -74,16 +74,16 @@
   <div class="course-detail">
     <div class="detail-item">
       <ul>
-        <li>课程名称：{{courseDetail.name}}</li>
-        <li>学分：{{courseDetail.credit}}</li>
-        <li>授课老师：{{courseDetail.teacher}}</li>
-        <li>课程类型：{{courseDetail.type}}</li>
+        <li>课程名称：{{courseDetail.name||'无'}}</li>
+        <li>学分：{{courseDetail.credit||'无'}}</li>
+        <li>授课老师：{{courseDetail.teacher||'无'}}</li>
+        <li>课程类型：{{courseDetail.type||'无'}}</li>
       </ul>
       <ul>
-         <li>备注：{{courseDetail.teacher}}</li>
-        <li>时间：{{courseDetail.time}}</li>
-        <li>地址：{{courseDetail.location}}</li>
-        <li>人数/容量：{{courseDetail.num_join+' / '+courseDetail.limit}}</li>
+         <li>备注：{{courseDetail.teacher||'无'}}</li>
+        <li>时间：{{courseDetail.time||'无'}}</li>
+        <li>地址：{{courseDetail.location||'无'}}</li>
+        <li>人数/容量：{{courseDetail.num_join||'无'+' / '+(courseDetail.limit||'无')}}</li>
       </ul>
     </div>
   </div>
@@ -126,8 +126,10 @@
 .detail-item {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   ul {
     width: 50%;
+    min-width: 160px;
     li {
       font-size:15px;
       line-height: 1.5em;
@@ -140,52 +142,38 @@
 
 
 <script>
-import { locationOptions } from '../variable';
+
+import { locationOptions, timeOptions, creditOptions, typeOptions } from '../variable';
 
 export default {
   props: {
-    // tableData: {
-    //   type: Array,
-    //   default: null,
-    // },
     checkAble: {
       type: Boolean,
       default: false,
     },
   },
   data: () => ({
+    locationOptions,
+    timeOptions,
+    typeOptions,
+    creditOptions,
     dialogTableVisible: false,
     tableData: [{
-      name: '聆听音乐',
-      credit: 2,
-      teacher: '111',
-      type: 'test',
-      addition: '1111111111111111111111111111111111111',
-    }, {
-      name: '聆听音乐',
-      credit: 2,
-      teacher: '111',
-      type: 'test',
+      name: '',
     }],
-    locationOptions,
+    studentsData: [],
     location: '',
-    courseDetail: {
-      name: '聆听音乐',
-      credit: 2,
-      teacher: '111',
-      type: 'test',
-      addition: '1111111111111111111111111111111111111',
-      time: '周四',
-      location: '东九楼',
-      limit: 1222,
-      num_join: 99,
-    },
+    time: '',
+    type: '',
+    credit: '',
+    keyword: '',
+    courseDetail: {},
   }),
   methods: {
     onClick(index, row) {
-      console.log(index, row);
       if (this.checkAble) {
         this.dialogTableVisible = true;
+        this.courseDetail = row;
       }
     },
   },

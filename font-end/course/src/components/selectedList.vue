@@ -40,11 +40,7 @@
 <script>
 export default {
   data: () => ({
-    tableData: [{
-      name: '聆听音乐',
-      credit: 2,
-      teacher: '111',
-    }],
+    tableData: [],
   }),
 };
 </script>

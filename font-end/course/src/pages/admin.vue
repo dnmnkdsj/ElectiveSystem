@@ -20,13 +20,13 @@
         <el-button type="primary" class="btn">确定</el-button>
       </el-form>
     </el-dialog>
-    <el-dialog title="选课时间" :visible.sync="formVisible">
+    <el-dialog :visible.sync="formVisible">
       <el-form label-position="right">
         <el-form-item label="课程名称">
-          <el-input placeholder="请输入名称" v-model="input10" clearable />
+          <el-input placeholder="请输入名称" v-model="courseName" clearable />
         </el-form-item>
         <el-form-item label="授课老师">
-          <el-input placeholder="请输入名称" v-model="input10" clearable />
+          <el-input placeholder="请输入名称" v-model="teacher" clearable />
         </el-form-item>
         <el-form-item label="地点">
           <el-select v-model="location" placeholder="选择上课地点">
@@ -36,7 +36,7 @@
         </el-form-item>
         <el-form-item label="时间">
           <el-select v-model="location" placeholder="选择上课时间">
-            <el-option v-for="(item,index) in locationOptions" :key="item" :label="item" :value="index">
+            <el-option v-for="(item,index) in timeOptions" :key="item" :label="item" :value="index">
             </el-option>
           </el-select>
         </el-form-item>
@@ -47,13 +47,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="分类">
-          <el-select v-model="type" placeholder="选择学科地点">
+          <el-select v-model="type" placeholder="选择学科">
             <el-option v-for="(item,index) in typeOptions" :key="item" :label="item" :value="index">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="容量">
-          <el-input-number v-model="num1" :min="1" :max="100"></el-input-number>
+          <el-input-number v-model="limit" :min="1" :max="100"></el-input-number>
         </el-form-item>
         <el-button type="primary" class="btn">确定</el-button>
       </el-form>
@@ -72,6 +72,11 @@
 .btn-group {
   display: flex;
   justify-content: space-around;
+  flex-wrap:  wrap;
+  .el-button {
+    margin-top:10px;
+    display: block;
+  }
 }
 .btn {
   display: block;
@@ -82,9 +87,21 @@
 
 <script>
 import CourseList from '../components/courseList.vue';
+import { locationOptions, timeOptions, creditOptions, typeOptions } from '../variable';
 
 export default {
   data: () => ({
+    locationOptions,
+    timeOptions,
+    typeOptions,
+    creditOptions,
+    time: '',
+    type: '',
+    credit: '',
+    location: '',
+    courseName: '',
+    teacher: '',
+    limit: '',
     timeVisible: false,
     formVisible: false,
     startTime: null,

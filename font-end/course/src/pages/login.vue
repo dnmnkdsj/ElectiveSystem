@@ -1,21 +1,21 @@
 <template>
   <div>
-    <el-card class="login-form">
+    <el-card class="login-form" v-loading="load">
       <el-form label-position="right" label-width="80px">
         <el-form-item label="学号/工号">
-          <el-input v-model="form.account" placeholder="请输入你的学号或工号"></el-input>
+          <el-input v-model="account" placeholder="请输入你的学号或工号"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.password" :type="passVisible" placeholder="请输入密码"></el-input>
+          <el-input v-model="password" :type="passVisible" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-checkbox-group v-model="form.type">
+          <el-checkbox-group v-model="type">
             <el-checkbox label="visible" name="type">密码可视</el-checkbox>
             <el-checkbox label="admin" name="type">管理员登录</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="验证码">
-          <el-input v-model="form.password" placeholder="请输入验证码"></el-input>
+          <el-input v-model="code" placeholder="请输入验证码"></el-input>
         </el-form-item>
         <img :src="imgSrc" alt="" class="code-img">
         <div class="btn-group">
@@ -55,25 +55,32 @@
 
 
 <script>
+import { postLogin } from '../api';
+
 export default {
   data: () => ({
-    form: {
-      account: '',
-      password: '',
-      type: [],
-    },
+    account: '',
+    password: '',
+    code: '',
+    type: [],
+
+    load: false,
     // eslint-disable-next-line
-    imgSrc: require('../assets/logo.png'),
+    imgSrc: require('../assets/code.png'),
   }),
   methods: {
-    login() {},
+    async login() {
+      this.load = true;
+      await postLogin(this.account, this.password);
+      this.load = false;
+    },
     foundLost() {
-      this.$router.push('/lost');
+      this.$router.replace('/lost');
     },
   },
   computed: {
     passVisible() {
-      return this.form.type.includes('visible') ? '' : 'password';
+      return this.type.includes('visible') ? '' : 'password';
     },
   },
 };

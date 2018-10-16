@@ -12,7 +12,7 @@ import SelectedList from './components/selectedList.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -23,6 +23,7 @@ export default new Router({
     {
       path: '/admin',
       component: Admin,
+      meta: { requireAuth: true, admin: true },
     },
     {
       path: '/login',
@@ -35,6 +36,7 @@ export default new Router({
     {
       path: '/course',
       component: Course,
+      meta: { requireAuth: true },
       children: [
         {
           path: '',
@@ -56,3 +58,14 @@ export default new Router({
     },
   ],
 });
+
+// router.beforeEach((to, from, next) => {
+//   const isLogin = !!localStorage.getItem('loginToken');// 获取本地存储的token
+//   if (to.meta.requireAuth && !isLogin) { // 判断该路由是否需要登录权限
+//     next({ path: '/404' });
+//   }
+//   next();
+// });
+
+export default router;
+
