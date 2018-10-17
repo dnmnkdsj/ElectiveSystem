@@ -211,9 +211,13 @@ export default {
         await this.$confirm('你是否确定选修该节课堂?', '提示', { type: 'info' });
         this.formLoading = true;
         try {
-          await postSelect(this.user.id, course.id, true);
+          const message = await postSelect(this.user.id, course.id, true);
           this.formLoading = false;
-          this.$alert('选修成功', '提示');
+          if (message.success) {
+            this.$alert('选修成功，可在【已选课程】查看', '提示');
+          } else {
+            this.$alert('选修失败，可能当前不是选修时间', '提示');
+          }
         } catch (e) {
           this.formLoading = false;
           this.$alert('服务器错误，请稍候刷新重试', '提示', { type: 'error' });

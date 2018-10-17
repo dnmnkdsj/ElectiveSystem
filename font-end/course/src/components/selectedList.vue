@@ -52,10 +52,14 @@ export default {
         await this.$confirm('你是否退选该节课堂?', '提示', { type: 'info' });
         this.loading = true;
         try {
-          await postSelect(this.user.id, course.id, false);
+          const message = await postSelect(this.user.id, course.id, false);
           this.loading = false;
-          this.$alert('退选成功', '提示');
-          this.removeCourse(index);
+          if (message.success) {
+            this.$alert('退选成功', '提示');
+            this.removeCourse(index);
+          } else {
+            this.$alert('退选失败', '提示');
+          }
         } catch (e) {
           this.loading = false;
           this.$alert('服务器错误，请稍候刷新重试', '提示', { type: 'error' });

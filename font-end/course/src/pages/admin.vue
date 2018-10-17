@@ -10,12 +10,15 @@
       <course-list check-able></course-list>
     </el-card>
     <el-dialog title="选课时间" :visible.sync="timeVisible">
-      <el-form label-position="right">
+      <el-form label-position="right" :inline="true">
         <el-form-item label="开始时间">
           <el-date-picker v-model="startTime" type="datetime"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间">
           <el-date-picker v-model="endTime" type="datetime"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="抽签时间">
+          <el-date-picker v-model="drawTime" type="datetime"></el-date-picker>
         </el-form-item>
         <el-button type="primary" class="btn">确定</el-button>
       </el-form>
@@ -114,6 +117,7 @@ export default {
     formVisible: false,
     startTime: null,
     endTime: null,
+    drawTime: null,
   }),
   methods: {
     setTime() {
