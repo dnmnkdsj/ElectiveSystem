@@ -51,10 +51,10 @@
 <script>
 export default {
   data: () => ({
-    state: 1,
+    state: -1,
     countHour: 0,
-    countMin: 1,
-    countSec: 10,
+    countMin: 0,
+    countSec: 0,
   }),
   mounted() {
     // TODO: 选课状态切换

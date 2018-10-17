@@ -9,7 +9,7 @@
 .wrap {
   width: 100%;
   max-width: $response-width*1.5;
-  margin: 50px auto 0;
+  margin: 30px auto 0;
   overflow: auto;
   min-height: 600px;
 }

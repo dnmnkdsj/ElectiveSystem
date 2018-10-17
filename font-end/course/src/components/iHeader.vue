@@ -5,7 +5,7 @@
         <h1><i class="el-icon-star-off"></i>选课系统</h1>
       </router-link>
     </el-col>
-    <el-col :xs="20" :sm="12">
+    <el-col :xs="20" :sm="12" style="height:60px;">
       <el-menu router class="menu" mode="horizontal"
       :text-color="color.color_text"
       :active-text-color="color.color_theme"
@@ -17,9 +17,9 @@
     </el-col>
     <el-col :xs='4' :sm="{span:2,offset:3}">
       <div class="btn-group">
-        <el-button type="text" v-if="!user">登录</el-button>
+        <el-button type="text" v-if="!user" @click="toLogin">登录</el-button>
         <div class="user-name" v-if="user">{{user.name}}</div>
-        <el-button type="text" v-if="user">登出</el-button>
+        <el-button type="text" v-if="user" @click="toLogout">登出</el-button>
       </div>
     </el-col>
   </el-row>
@@ -57,27 +57,38 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { storeKey, color } from '../variable';
+import { storeKey, color, routes, adminRoutes, storeType, authLevel } from '../variable';
 
 export default {
   data: () => ({
     color,
-    tabs: [
-      { path: '/course', name: '课程列表' },
-      { path: '/course/selected', name: '已选课程' },
-      { path: '/course/finished', name: '已修课程' },
-    ],
   }),
+  methods: {
+    toLogin() {
+      this.$router.replace('/login');
+    },
+    toLogout() {
+      this.$store.commit(storeType.LOGOUT);
+      this.$router.replace('/');
+    },
+  },
   created() {
     this.activeIndex = this.$route.path;
   },
   computed: {
     ...mapGetters([storeKey.userKey]),
-
+    tabs() {
+      if (this.user) {
+        return this.user.auth >= authLevel ? adminRoutes : routes;
+      }
+      return [];
+    },
   },
   watch: {
     $route(to) {
-      this.$refs.menu.activeIndex = to.path;
+      if (this.user && this.$refs.menu) {
+        this.$refs.menu.activeIndex = to.path;
+      }
     },
   },
 };
