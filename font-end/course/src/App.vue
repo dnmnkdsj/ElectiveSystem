@@ -1,14 +1,12 @@
 <template>
   <div id="app">
     <i-header />
-    <keep-alive>
-      <router-view />
-    </keep-alive>
+    <router-view />
   </div>
 </template>
 
 <style lang="scss">
-@import './style/main';
+@import "./style/main";
 </style>
 
 <script>
@@ -18,5 +16,9 @@ export default {
   components: {
     IHeader,
   },
+  mounted() {
+    console.log('test');
+  },
+
 };
 </script>

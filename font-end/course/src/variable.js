@@ -1,13 +1,34 @@
+// data config
+
 export const storeKey = {
+  tokenKey: 'token',
   userKey: 'user',
   stateKey: 'courseState',
 };
 
 export const storeType = {
   LOGIN: 'LOGIN',
-  LOGOUT: 'LOOUT',
+  LOGOUT: 'LOGOUT',
   CHANGE_STATE: 'STATE_CHANGE',
 };
+export const routes = [
+  { path: '/course', name: '课程列表' },
+  { path: '/course/selected', name: '已选课程' },
+  { path: '/course/finished', name: '已修课程' },
+];
+
+export const adminRoutes = [
+  { path: '/admin', name: '管理课程' },
+];
+
+export const authLevel = 5;
+
+
+export const codeAnswer = [
+  'dgks', 'uqdo',
+];
+
+// client customization
 
 export const color = {
   color_background: '#fff',
@@ -16,11 +37,7 @@ export const color = {
   color_text: '#444444',
 };
 
-export const routes = [
-  { path: '/course', name: '课程列表' },
-  { path: '/course/selected', name: '已选课程' },
-  { path: '/course/finished', name: '已修课程' },
-];
+export const pageSize = 10;
 
 export const certificateType = [
   '身份证',
@@ -45,3 +62,8 @@ export const creditOptions = [
 export const typeOptions = [
   '人文', '科学', '综合',
 ];
+
+export const chooseState = [
+  '待抽签', '正选',
+];
+

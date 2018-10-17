@@ -13,16 +13,13 @@
         <el-menu-item :index="tab.path" v-for="tab in tabs" :key="tab.path">
           {{tab.name}}
         </el-menu-item>
-        <el-menu-item :index="'/admin'" v-if="user">
-          管理课程
-        </el-menu-item>
       </el-menu>
     </el-col>
     <el-col :xs='4' :sm="{span:2,offset:3}">
       <div class="btn-group">
         <el-button type="text" v-if="!user" @click="toLogin">登录</el-button>
         <div class="user-name" v-if="user">{{user.name}}</div>
-        <el-button type="text" v-if="user">登出</el-button>
+        <el-button type="text" v-if="user" @click="toLogout">登出</el-button>
       </div>
     </el-col>
   </el-row>
@@ -60,27 +57,36 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { storeKey, color, routes } from '../variable';
+import { storeKey, color, routes, adminRoutes, storeType, authLevel } from '../variable';
 
 export default {
   data: () => ({
     color,
-    tabs: routes,
   }),
   methods: {
     toLogin() {
       this.$router.replace('/login');
     },
+    toLogout() {
+      this.$store.commit(storeType.LOGOUT);
+      this.$router.replace('/');
+    },
   },
-  mounted() {
+  created() {
     this.activeIndex = this.$route.path;
   },
   computed: {
     ...mapGetters([storeKey.userKey]),
+    tabs() {
+      if (this.user) {
+        return this.user.auth >= authLevel ? adminRoutes : routes;
+      }
+      return [];
+    },
   },
   watch: {
     $route(to) {
-      if (this.user) {
+      if (this.user && this.$refs.menu) {
         this.$refs.menu.activeIndex = to.path;
       }
     },

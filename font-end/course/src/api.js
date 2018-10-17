@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { pageSize } from './variable';
 
 const axios = Axios.create({
   baseURL: '/api',
@@ -33,13 +34,44 @@ axios.interceptors.response.use(
   },
 );
 
-export const postLogin = async (accout, password) => {
-  const data = Object.assign({}, { accout, password });
-  console.log(data);
-  const res = await axios.post('/user/login', data);
+export const postLogin = async (account, password) => {
+  const data = Object.assign({}, { account, password });
+  try {
+    const res = await axios.post('/user/login', data);
+    if (res.data.status !== 200) { throw new Error('server login is failed'); }
+    return res.data.message;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
 };
 
-export const getCourses = async () => {
-  const res = await axios.post('/get');
+export const getCourses = async (payload = {}) => {
+  let params = {
+    limit: pageSize,
+    offset: 0,
+  };
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== '') {
+      params = Object.assign(params, { [key]: value });
+    }
+  });
+  try {
+    const res = await axios.get('/courses', { params });
+    if (res.data.status !== 200) { throw new Error('server login is failed'); }
+    return res.data.message;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const postSelect = async (userId, courseId, select) => {
+  const data = Object.assign({}, { user_id: userId, course_id: courseId, select });
+  try {
+    const res = await axios.post('/user/select', data);
+    if (res.data.status !== 200) { throw new Error('server login is failed'); }
+    return res.data.message;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
 };
 
