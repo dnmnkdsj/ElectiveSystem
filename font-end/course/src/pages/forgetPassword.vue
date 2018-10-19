@@ -5,22 +5,22 @@
       <el-step title="重新设置密码"></el-step>
       <el-step title="完成"></el-step>
     </el-steps>
-    <el-form label-position="right" class="login-form" label-width="80px" v-show="active==0">
-      <el-form-item label="学号/工号">
+    <el-form label-position="right" class="login-form" label-width="100px" v-show="active==0" :model="form" :rules="rules">
+      <el-form-item label="学号/工号" prop="account" >
         <el-input v-model="form.account" placeholder="请输入你的学号或工号"></el-input>
       </el-form-item>
-      <el-form-item label="真实姓名">
+      <el-form-item label="真实姓名" prop="realName" >
         <el-input v-model="form.realName" placeholder="请输入姓名"></el-input>
       </el-form-item>
-      <el-form-item label="证件类型">
-        <el-select v-model="certificate" placeholder="请选择你的证件类型" style="margin">
+      <el-form-item label="证件类型" prop="certificate">
+        <el-select v-model="form.certificate" placeholder="请选择你的证件类型" style="margin">
           <el-option v-for="(item,index) in certificateType" :key="item"
           :label="item" :value="index">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="证件信息">
-        <el-input v-model="form.realName" placeholder="请输入真实证件号码"></el-input>
+      <el-form-item label="证件信息" prop="identity" >
+        <el-input v-model="form.identity" placeholder="请输入真实证件号码"></el-input>
       </el-form-item>
       <div class="btn-group">
         <el-button @click="next">下一步</el-button>
@@ -65,19 +65,33 @@ import { certificateType } from '../variable';
 
 export default {
   data: () => ({
-    certificate: '',
     active: 0,
     form: {
       account: '',
       identity: '',
       realName: '',
+      certificate: '',
     },
     certificateType,
+    rules: {
+      account: [
+        { required: true, message: '该项不能为空', trigger: 'blur' },
+      ],
+      identity: [
+        { required: true, message: '该项不能为空', trigger: 'blur' },
+      ],
+      realName: [
+        { required: true, message: '该项不能为空', trigger: 'blur' },
+      ],
+      certificate: [
+        { required: true, message: '该项不能为空', trigger: 'blur' },
+      ],
+    },
   }),
   methods: {
-    // TODO:确认密码逻辑 require逻辑
     next() {
-      this.active += 1;
+      const { form } = this;
+      if (form.realName && form.identity && form.account && form.certificate) { this.active += 1; }
     },
     pre() {
       this.active -= 1;
