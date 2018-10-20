@@ -58,6 +58,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { storeKey, color, routes, adminRoutes, storeType, authLevel } from '../variable';
+import { postLogout } from '../api';
 
 export default {
   data: () => ({
@@ -67,8 +68,16 @@ export default {
     toLogin() {
       this.$router.replace('/login');
     },
-    toLogout() {
+    async toLogout() {
+      const loading = this.$loading({
+        lock: true,
+        text: '登出中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      });
+      await postLogout();
       this.$store.commit(storeType.LOGOUT);
+      loading.close();
       this.$router.replace('/');
     },
   },

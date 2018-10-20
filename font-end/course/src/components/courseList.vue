@@ -86,8 +86,8 @@
       <el-button type="danger"> 删除 </el-button>
       <el-table :data="studentsData">
         <el-table-column property="name" label="姓名"></el-table-column>
-        <el-table-column property="id" label="学号"></el-table-column>
-        <el-table-column property="class" label="学院班级"></el-table-column>
+        <el-table-column property="schoolId" label="学号"></el-table-column>
+        <el-table-column property="major" label="所在专业"></el-table-column>
         <el-table-column label="课程评定">
           <template slot-scope="scope">
             <el-button size="mini" type="success" @click="handle(scope.$index, scope.row)">
@@ -140,7 +140,6 @@
 
 <script>
 
-import { mapGetters } from 'vuex';
 import { locationOptions, timeOptions, creditOptions, typeOptions, pageSize } from '../variable';
 import { getCourses, postSelect } from '../api';
 
@@ -211,12 +210,12 @@ export default {
         await this.$confirm('你是否确定选修该节课堂?', '提示', { type: 'info' });
         this.formLoading = true;
         try {
-          const message = await postSelect(this.user.id, course.id, true);
+          const message = await postSelect(course.id, true);
           this.formLoading = false;
           if (message.success) {
             this.$alert('选修成功，可在【已选课程】查看', '提示');
           } else {
-            this.$alert('选修失败，可能当前不是选修时间', '提示');
+            this.$alert('选修失败，可能当前不是选修时间或者您已选修过本课程', '提示');
           }
         } catch (e) {
           this.formLoading = false;
@@ -226,9 +225,6 @@ export default {
         this.$message({ type: 'info', message: '已取消选课' });
       }
     },
-  },
-  computed: {
-    ...mapGetters(['user']),
   },
 };
 </script>

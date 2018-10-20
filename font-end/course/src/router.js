@@ -71,7 +71,7 @@ const router = new Router({
 //   if (to.meta.requireAuth && !isLogin) { // 判断该路由是否需要登录权限
 //     next('/404');
 //   }
-//   if (to.meta.admin && store.state.user.auth < authLevel) {
+//   if (to.meta.admin && store.state.user.auth != authLevel[1]) {
 //     next('/404');
 //   }
 //   next();

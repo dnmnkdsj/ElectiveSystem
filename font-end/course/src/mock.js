@@ -18,76 +18,71 @@ Mock.mock('/api/user/login', 'post', (req) => {
       user: {
         name: '@string(1,6)',
         'id|0-99999': 1,
-        auth: 'admin',
+        auth: 'student',
         major: 'computer',
         schoolId,
       },
       success: true,
-      token: 'adsfsdafsdfasdfsadfasdfasdfsadfsdf',
 
     });
   }
   return Mock.mock({
-    status: 200,
-    message: {
-      user: {},
-      success: false,
-      token: '',
-    },
+    user: {},
+    success: false,
   });
 });
+
+Mock.mock('/api/user/logout', 'post', () => Mock.mock({
+  success: true,
+}));
 
 Mock.mock(/^\/api\/courses/, 'get', (req) => {
   const { query } = url.parse(req.url, true);
   const {
     limit, credit, time, type, location, keyword,
   } = query;
-  const result = { status: 200 };
-  let message;
-  if (query.finished) {
-    message = Mock.mock({
-      [`courses|1-${limit}`]: [
-        {
-          id: '@integer(1, 100)',
-          name: '@string(1,6)',
-          'credit|+1': creditOptions,
-          'type|+1': typeOptions,
-          teacher: '@string(1,6)',
-        },
-      ],
+  const message = Mock.mock({
+    [`courses|1-${limit}`]: [
+      {
+        id: '@integer(1, 100)',
+        name: `@string(1,6)${keyword || ''}`,
+        'credit|+1': credit || creditOptions,
+        'type|+1': type || typeOptions,
+        limit: '@integer(1, 100)',
+        num_join: '@integer(1, 100)',
+        'course_time|+1': time || timeOptions,
+        'course_location|+1': location || locationOptions,
+        teacher: `@string(1,6)${keyword || ''}`,
+        addition: `@string(1,20)${keyword || ''}`,
+      },
+    ],
+    total: 100,
+  });
+  if (query.selected) {
+    message.courses.forEach((element) => {
+      Object.assign(element, { has_choosen: Random.integer(0, 1) });
     });
-  } else {
-    message = Mock.mock({
-      [`courses|1-${limit}`]: [
-        {
-          id: '@integer(1, 100)',
-          name: `@string(1,6)${keyword || ''}`,
-          'credit|+1': credit || creditOptions,
-          'type|+1': type || typeOptions,
-          limit: '@integer(1, 100)',
-          num_join: '@integer(1, 100)',
-          'course_time|+1': time || timeOptions,
-          'course_location|+1': location || locationOptions,
-          teacher: `@string(1,6)${keyword || ''}`,
-          addition: `@string(1,20)${keyword || ''}`,
-        },
-      ],
-      total: 100,
-    });
-    if (query.selected) {
-      message.courses.forEach((element) => {
-        Object.assign(element, { has_choosen: Random.integer(0, 1) });
-      });
-      delete message.total;
-    }
+    delete message.total;
   }
-  return Object.assign(result, { message });
+  return message;
+});
+
+Mock.mock(/^\/api\/user\/passedcourses/, 'get', () => {
+  const message = Mock.mock({
+    'courses|1-6': [
+      {
+        id: '@integer(1, 100)',
+        name: '@string(1,6)',
+        'credit|+1': creditOptions,
+        'type|+1': typeOptions,
+        teacher: '@string(1,6)',
+      },
+    ],
+  });
+  return message;
 });
 
 Mock.mock('/api/user/select', 'post', () => Mock.mock({
-  status: 200,
-  message: {
-    success: Random.boolean(),
-  },
+  success: Random.boolean(),
 }));
 

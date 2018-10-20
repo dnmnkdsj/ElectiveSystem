@@ -18,8 +18,8 @@
 
 
 <script>
-import { getCourses } from '../api';
 import { mapGetters } from 'vuex';
+import { getPassedCourses } from '../api';
 
 export default {
   data: () => ({
@@ -29,7 +29,7 @@ export default {
   async mounted() {
     this.loading = true;
     try {
-      const data = await getCourses({ finished: true });
+      const data = await getPassedCourses();
       this.tableData = data.courses;
       this.loading = false;
     } catch (e) {

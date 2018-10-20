@@ -107,7 +107,7 @@ server 将从每个报文的头部自动读取 cookie 来判断身份。
   - Schema
 
           {
-              "success": "true表示通过，false表示失败、课程不存在等"
+              "success": "true表示通过，false表示失败、课程不存在课程已选修过了等"
           }
 
 ## 更改密码 [POST /api/user/changepwd/]
@@ -149,7 +149,7 @@ server 将从每个报文的头部自动读取 cookie 来判断身份。
   - Body
 
           {
-              "limit": Number
+              "limit": Number //返回数据的上限数
               "offset": Number //参照数据库这两个关键字 这两个关键字必然存在 后面参数可能不存在
               "keyword": String
               "time": Number
@@ -195,7 +195,7 @@ server 将从每个报文的头部自动读取 cookie 来判断身份。
                       "teacher": "老师",
                       "addtion": "Python初级教学2"
                   }],
-              "total": 2
+              "total": 2  //分页用的 是所有符合条件的数据条数
           }
 
   - Schema
