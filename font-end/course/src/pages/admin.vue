@@ -3,7 +3,6 @@
     <el-card class="wrap">
       <div class="btn-group">
         <el-button type="primary" @click="setTime">设置选课时间</el-button>
-        <el-button type="primary">抽签</el-button>
         <el-button type="danger" @click="handleBreak">中断选课</el-button>
         <el-button type="success" @click="addCourse">添加课程</el-button>
       </div>
@@ -178,7 +177,7 @@ export default {
     },
     async postTime(payload) {
       try {
-        await this.$confirm('你确定如此设置时间?', '提示', { type: 'error' });
+        await this.$confirm('你确定如此设置时间?', '提示', { type: 'success' });
         this.timeloading = true;
         try {
           const message = await putTiming(payload);
@@ -219,7 +218,7 @@ export default {
       // eslint-disable-next-line
       const { start_time, end_time, draw_time } = result;
       // eslint-disable-next-line
-      if (start_time < end_time && draw_time < end_time) {
+      if (start_time < end_time && draw_time > end_time) {
         return result;
       }
       return false;
