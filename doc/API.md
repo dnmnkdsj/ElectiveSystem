@@ -144,9 +144,9 @@ server 将从每个报文的头部自动读取 cookie 来判断身份。
 
 ### 查询课程 [GET]
 
-- Request (application/json)
++ Request (application/json)
 
-  - Body
+  + Body
 
           {
               "limit": Number //返回数据的上限数
@@ -158,16 +158,16 @@ server 将从每个报文的头部自动读取 cookie 来判断身份。
               "type": String
           }
 
-  - Schema
+  + Schema
 
           {
               "limit": "Number",
               "offset": "参照数据库这两个关键字 这两个关键字必然存在 后面参数可能不存在"
           }
 
-- Response 200 (application/json)
++ Response 200 (application/json)
 
-  - Body
+  + Body
 
           {
               "courses":[
@@ -221,7 +221,7 @@ Response 400 if has no admin auth.
 
   - Body
 
-          {
+            {
               "name": "python课程1",
               "credit": 2,
               "type": "科学",

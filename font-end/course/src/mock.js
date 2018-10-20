@@ -111,3 +111,18 @@ Mock.mock(/^\/api\/courses/, 'get', (req) => {
   }
   return message;
 });
+
+Mock.mock('/api/courses', 'post', () => Mock.mock({
+  success: true,
+}));
+
+Mock.mock('/api/setup/break', 'post', () => Mock.mock({
+  success: true,
+}));
+Mock.mock('/api/setup/times', 'put', (req) => {
+  const info = JSON.parse(req.body);
+  console.log(info);
+  return Mock.mock({
+    success: true,
+  });
+});

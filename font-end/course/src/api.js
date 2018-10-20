@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { pageSize } from './variable';
-import { router } from './router';
+import router from './router';
 
 const axios = Axios.create({
   baseURL: '/api',
@@ -90,6 +90,33 @@ export const getCourseDetail = async (id) => {
 export const delCourse = async (id) => {
   try {
     const res = await axios.delete(`/courses/${id}`);
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const postNewCourse = async (payload) => {
+  try {
+    const res = await axios.post('/courses', payload);
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const postBreak = async () => {
+  try {
+    const res = await axios.post('/setup/break');
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const putTiming = async (data) => {
+  try {
+    const res = await axios.put('/setup/times', data);
     return res.data;
   } catch (e) {
     throw new Error('server login is failed');

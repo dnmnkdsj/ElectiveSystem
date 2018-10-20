@@ -228,7 +228,6 @@ export default {
     async getCourseDetail(id) {
       this.listLoading = true;
       try {
-        console.log(id);
         const data = await getCourseDetail(id);
         this.studentsData = data.students;
         this.listLoading = false;
