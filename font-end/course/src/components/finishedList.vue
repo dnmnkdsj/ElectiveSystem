@@ -19,6 +19,7 @@
 
 <script>
 import { getCourses } from '../api';
+import { mapGetters } from 'vuex';
 
 export default {
   data: () => ({
@@ -38,6 +39,9 @@ export default {
         confirmButtonText: '确定',
       });
     }
+  },
+  computed: {
+    ...mapGetters(['user']),
   },
 };
 </script>

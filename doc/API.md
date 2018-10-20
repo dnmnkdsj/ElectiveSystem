@@ -118,6 +118,7 @@ message
 
 request
 {
+    user_id:NUM
     finished:true //当查询已修课程时 会有该参数 当与selected共存时报错response的status改为404
 }
 

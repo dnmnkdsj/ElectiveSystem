@@ -12,7 +12,7 @@ axios.interceptors.request.use(
     if (config.method !== 'get') {
       const token = localStorage.getItem('loginToken');
       if (token) {
-        config.headers.Authorization = token;
+        config.headers.token = token;
       }
     }
     return config;
@@ -35,9 +35,10 @@ axios.interceptors.response.use(
 );
 
 export const postLogin = async (account, password) => {
-  const data = Object.assign({}, { account, password });
+  const data = Object.assign({}, { schoolID: account, password });
   try {
     const res = await axios.post('/user/login', data);
+    console.log(res);
     if (res.data.status !== 200) { throw new Error('server login is failed'); }
     return res.data.message;
   } catch (e) {
