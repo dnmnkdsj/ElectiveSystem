@@ -3,7 +3,7 @@
     <el-card class="login-form" v-loading="load">
       <el-form label-position="right" label-width="80px" :rules="rules" ref="loginForm" :model="form">
         <el-form-item label="学号/工号" prop="account">
-          <el-input v-model="form.account" placeholder="请输入你的学号或工号"></el-input>
+          <el-input v-model="form.account" placeholder="请输入10位的学号或工号"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password" :type="passVisible" placeholder="请输入密码"></el-input>
@@ -104,7 +104,7 @@ export default {
         try {
           const data = await postLogin(account, password);
           if (data.success) {
-            this.login(data);
+            this.login(data.user);
             this.$router.replace('/');
           } else {
             this.warningMessage('密码或用户名错误');

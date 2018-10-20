@@ -1,16 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
+import * as Cookies from 'js-cookie';
 import { storeKey, storeType } from './variable';
 
 Vue.use(Vuex);
 
 const searchHistory = (store) => {
   let user = localStorage.getItem(storeKey.userKey);
-  const token = localStorage.getItem(storeKey.tokenKey);
-  if (user && token) {
+  let hasLogin = !!Cookies.get('Authorization');
+  hasLogin = true; // TODO: test
+  if (hasLogin && user) {
     user = JSON.parse(user);
-    store.dispatch('login', { user, token });
+    store.dispatch('login', user);
   }
 };
 
@@ -19,20 +20,16 @@ export default new Vuex.Store({
   state: {
     user: null,
     courseState: -1,
-    token: null,
   },
   mutations: {
-    [storeType.LOGIN](state, { user, token }) {
+    [storeType.LOGIN](state, user) {
       const userInfo = JSON.stringify(user);
       localStorage.setItem(storeKey.userKey, userInfo);
-      localStorage.setItem(storeKey.tokenKey, token);
       state.user = user;
-      state.token = token;
     },
     [storeType.LOGOUT](state) {
       state.user = null;
       localStorage.removeItem(storeKey.userKey);
-      localStorage.removeItem(storeKey.tokenKey);
     },
     [storeType.CHANGE_STATE](state, newState) {
       state.courseState = newState;
@@ -45,8 +42,8 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit(storeType.LOGOUT);
     },
-    changeState({ commit }, newState) {
-      commit(storeType.CHANGE_STATE, newState);
+    changeState({ commit }, payload) {
+      commit(storeType.CHANGE_STATE, payload);
     },
   },
   getters: {

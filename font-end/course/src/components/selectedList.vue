@@ -37,7 +37,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
 import { getCourses, postSelect } from '../api';
 import { chooseState } from '../variable';
 
@@ -52,7 +51,7 @@ export default {
         await this.$confirm('你是否退选该节课堂?', '提示', { type: 'info' });
         this.loading = true;
         try {
-          const message = await postSelect(this.user.id, course.id, false);
+          const message = await postSelect(course.id, false);
           this.loading = false;
           if (message.success) {
             this.$alert('退选成功', '提示');
@@ -88,9 +87,6 @@ export default {
         confirmButtonText: '确定',
       });
     }
-  },
-  computed: {
-    ...mapGetters(['user']),
   },
 };
 </script>
