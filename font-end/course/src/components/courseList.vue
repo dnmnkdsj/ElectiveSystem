@@ -88,13 +88,18 @@
         <el-table-column property="name" label="姓名" min-width="100"></el-table-column>
         <el-table-column property="school_id" label="学号" min-width="100"></el-table-column>
         <el-table-column property="major" label="所在专业" min-width="100"></el-table-column>
+        <el-table-column property="state" label="当前状态" min-width="100"></el-table-column>
         <el-table-column label="课程评定" min-width="100">
           <template slot-scope="scope">
             <div class="btn-group">
-              <el-button size="mini" type="success" @click="handle(scope.$index, scope.row)">
+              <el-button size="mini" type="success"
+              @click="setPass(scope.$index, scope.row,true)"
+              :disabled="scope.row.state!=='待评定'">
                 通过
               </el-button>
-              <el-button size="mini" type="danger" @click="handle(scope.$index, scope.row)">
+              <el-button size="mini" type="danger"
+              @click="setPass(scope.$index, scope.row,false)"
+              :disabled="scope.row.state!=='待评定'">
                 不及格
               </el-button>
             </div>
@@ -156,8 +161,8 @@
 
 <script>
 
-import { locationOptions, timeOptions, creditOptions, typeOptions, pageSize } from '../variable';
-import { getCourses, getCourseDetail, postSelect, delCourse } from '../api';
+import { locationOptions, timeOptions, creditOptions, typeOptions, pageSize, passedState } from '../variable';
+import { getCourses, getCourseDetail, postSelect, delCourse, postPass } from '../api';
 
 export default {
   props: {
@@ -229,7 +234,7 @@ export default {
       this.listLoading = true;
       try {
         const data = await getCourseDetail(id);
-        this.studentsData = data.students;
+        this.studentsData = data;
         this.listLoading = false;
       } catch (e) {
         this.listLoading = false;
@@ -277,6 +282,30 @@ export default {
         }
       } catch (e) {
         this.$message({ type: 'info', message: '已取消删除' });
+      }
+    },
+    async setPass(index, row, passed) {
+      const courseId = this.activeIndex;
+      const studentId = row.id;
+      passed = passed ? 1 : 2;
+      try {
+        await this.$confirm('你是否确定作如此评定?', '提示', { type: 'info' });
+        this.listLoading = true;
+        try {
+          const message = await postPass(studentId, courseId, passed);
+          this.listLoading = false;
+          if (message.success) {
+            this.$alert('评定成功', '提示');
+            this.studentsData[index].state = passedState[passed];
+          } else {
+            this.$alert('评定失败，请重试', '提示');
+          }
+        } catch (e) {
+          this.listLoading = false;
+          this.$alert('服务器错误，请稍候刷新重试', '提示', { type: 'error' });
+        }
+      } catch (e) {
+        this.$message({ type: 'info', message: '已取消' });
       }
     },
   },

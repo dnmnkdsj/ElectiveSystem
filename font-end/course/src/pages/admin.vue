@@ -16,8 +16,8 @@
         <el-form-item label="结束时间" prop="end_time">
           <el-date-picker v-model="timeForm.end_time" type="datetime"></el-date-picker>
         </el-form-item>
-        <el-form-item label="抽签时间" prop="draw_time">
-          <el-date-picker v-model="timeForm.draw_time" type="datetime"></el-date-picker>
+        <el-form-item label="抽签时间" prop="select_time">
+          <el-date-picker v-model="timeForm.select_time" type="datetime"></el-date-picker>
         </el-form-item>
         <el-button type="primary" class="btn" @click="handleSet">确定</el-button>
       </el-form>
@@ -117,7 +117,7 @@ export default {
     timeForm: {
       start_time: null,
       end_time: null,
-      draw_time: null,
+      select_time: null,
     },
     timeloading: false,
     timeVisible: false,
@@ -216,9 +216,9 @@ export default {
         result = Object.assign(result, { [key]: Date.parse(value) });
       });
       // eslint-disable-next-line
-      const { start_time, end_time, draw_time } = result;
+      const { start_time, end_time, select_time } = result;
       // eslint-disable-next-line
-      if (start_time < end_time && draw_time > end_time) {
+      if (start_time < end_time && select_time > end_time) {
         return result;
       }
       return false;

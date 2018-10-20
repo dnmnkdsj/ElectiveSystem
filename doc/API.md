@@ -95,7 +95,7 @@ server将从每个报文的头部自动读取cookie来判断身份。
                         "num_join": 35,
                         "credit": 2,
                         "in_course": true
-                        //缺一个state 表示未抽签 还是被抽中 ，因为有抽签阶段。。
+                        "state":"waiting"
                     },
                     {
                         "id": 124,
@@ -107,8 +107,13 @@ server将从每个报文的头部自动读取cookie来判断身份。
                         "num_join": 35,
                         "credit": 2,
                         "in_course": true
+                        "state":"selected"
                     }]
             }
+
+             + Schema
+
+            "state": "Option: waiting,selected"
 
 ## 学生选课 [POST /api/user/select/]
 
@@ -319,13 +324,10 @@ Response 400 if has no admin auth.
     + Body
 
             {
-                "students": [{
+                "student": {
                     "id": 12,
                     "state": "passed"
-                    },{
-                    "id": 13,
-                    "state": "undecided"
-                    }]
+                    }
             }
 
     + Schema
@@ -359,7 +361,7 @@ Response 400 if has no admin auth.
             {
                 "start_time": 1540029819000,
                 "end_time": 1540029824000,
-                "select_time": 1540029819000
+                "select_time": 1540029829000
             }
 
 ### 更新选课的开始、结束和抽签时间 [PUT]

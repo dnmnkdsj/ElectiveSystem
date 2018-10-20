@@ -16,9 +16,7 @@ export default {
   components: {
     IHeader,
   },
-  mounted() {
-    console.log('test');
-  },
+
 
 };
 </script>

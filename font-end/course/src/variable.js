@@ -63,7 +63,7 @@ export const timeRules = {
   end_time: [
     { required: true, message: '请设置结束时间', trigger: 'change' },
   ],
-  draw_time: [
+  select_time: [
     { required: true, message: '请设置抽签时间', trigger: 'change' },
   ],
 
@@ -107,3 +107,14 @@ export const chooseState = [
   '待抽签', '正选',
 ];
 
+export const chooseStateEN = [
+  'waiting', 'selected',
+];
+
+export const passedState = [
+  '待评定', '通过', '不及格',
+];
+
+export const passedStateEN = [
+  'undecided', 'passed', 'failed',
+];

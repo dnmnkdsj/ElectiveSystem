@@ -63,19 +63,19 @@ const router = new Router({
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   const isLogin = !!store.state.user;
-//   if (to.matched.length === 0) { // 如果未匹配到路由
-//     next('/404');
-//   }
-//   if (to.meta.requireAuth && !isLogin) { // 判断该路由是否需要登录权限
-//     next('/404');
-//   }
-//   if (to.meta.admin && store.state.user.auth != authLevel[1]) {
-//     next('/404');
-//   }
-//   next();
-// });
+router.beforeEach((to, from, next) => {
+  const isLogin = !!store.state.user;
+  if (to.matched.length === 0) { // 如果未匹配到路由
+    next('/404');
+  }
+  if (to.meta.requireAuth && !isLogin) { // 判断该路由是否需要登录权限
+    next('/404');
+  }
+  if (to.meta.admin && store.state.user.auth !== authLevel[1]) {
+    next('/404');
+  }
+  next();
+});
 
 export default router;
 
