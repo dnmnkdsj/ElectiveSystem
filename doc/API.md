@@ -274,6 +274,7 @@ Response 400 if has no admin auth.
                   "name": "学生1",
                   "school_id": "U2016171"
                   "major":"computer"
+                  //state 用来表示 是 通过了 未及格 还是未评定
               },{
                   "id": 13,
                   "name": "学生2",
@@ -318,6 +319,8 @@ Response 400 if has no admin auth.
 
           "success": true
 
+## 因为没有找回密码 所以不需要更改密码的API
+
 ## 缺 GET 查看三个时间戳的请求
 
 ## 需要一个查询学生已选课程的 api 所需字段参考 api/courses
@@ -335,3 +338,19 @@ Response 400 if has no admin auth.
  ```
 
 ## 学生通过的课程 我把不需要的字段去掉了
+
+## 需要一个POST 改变某个学生的通过状态的 api state有三个 未评定 通过，不及格 /api/courses/:id 那个api需要改一改
+- Request (application/json)
+
+  - Body
+
+          {
+              "pass": true
+              "student_id": 2
+          }
+
+  - Schema
+
+          {
+              "pass": "true表示通过，false表示未通过"
+          }

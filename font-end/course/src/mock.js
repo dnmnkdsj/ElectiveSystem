@@ -1,11 +1,6 @@
 import url from 'url';
 
-import {
-  creditOptions,
-  locationOptions,
-  typeOptions,
-  timeOptions,
-} from './variable';
+import { creditOptions, locationOptions, typeOptions, timeOptions } from './variable';
 // eslint-disable-next-line
 const Mock = require('mockjs');
 const { Random } = Mock;
@@ -35,6 +30,56 @@ Mock.mock('/api/user/login', 'post', (req) => {
 Mock.mock('/api/user/logout', 'post', () => Mock.mock({
   success: true,
 }));
+
+Mock.mock(/^\/api\/user\/passedcourses/, 'get', () => {
+  const message = Mock.mock({
+    'courses|1-6': [
+      {
+        id: '@integer(1, 100)',
+        name: '@string(1,6)',
+        'credit|+1': creditOptions,
+        'type|+1': typeOptions,
+        teacher: '@string(1,6)',
+      },
+    ],
+  });
+  return message;
+});
+
+Mock.mock('/api/user/select', 'post', () => Mock.mock({
+  success: Random.boolean(),
+}));
+
+Mock.mock(/^\/api\/courses\//, 'delete', () => Mock.mock({
+  success: Random.boolean(),
+}));
+
+
+Mock.mock(/^\/api\/courses\//, 'get', () => {
+  const message = Mock.mock({
+    course:
+      {
+        id: '@integer(1, 100)',
+        name: '@string(1,6)',
+        'credit|+1': creditOptions,
+        'type|+1': typeOptions,
+        limit: '@integer(1, 100)',
+        num_join: '@integer(1, 100)',
+        'course_time|+1': timeOptions,
+        'course_location|+1': locationOptions,
+        teacher: '@string(1,6)',
+        addition: '@string(1,20)',
+      },
+    'students|1-30': [{
+      id: 12,
+      name: '@string(1,5)',
+      school_id: 'U2016171',
+      major: '@string(1,5)',
+    }],
+  });
+  return message;
+});
+
 
 Mock.mock(/^\/api\/courses/, 'get', (req) => {
   const { query } = url.parse(req.url, true);
@@ -66,23 +111,3 @@ Mock.mock(/^\/api\/courses/, 'get', (req) => {
   }
   return message;
 });
-
-Mock.mock(/^\/api\/user\/passedcourses/, 'get', () => {
-  const message = Mock.mock({
-    'courses|1-6': [
-      {
-        id: '@integer(1, 100)',
-        name: '@string(1,6)',
-        'credit|+1': creditOptions,
-        'type|+1': typeOptions,
-        teacher: '@string(1,6)',
-      },
-    ],
-  });
-  return message;
-});
-
-Mock.mock('/api/user/select', 'post', () => Mock.mock({
-  success: Random.boolean(),
-}));
-

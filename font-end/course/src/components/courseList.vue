@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <el-form :inline="true" class="find-form" :model="form" ref="retriveForm" >
+    <el-form :inline="true" class="find-form" :model="form" ref="retriveForm">
       <el-form-item label="地点" prop="location">
         <el-select v-model="form.location" placeholder="选择上课地点">
           <el-option v-for="item in locationOptions" :key="item" :label="item" :value="item">
@@ -66,7 +66,7 @@
     </el-table>
     <el-pagination :page-size="pageSize" :pager-count="9" layout="prev, pager, next" :total="totalCount" @current-change="pageChange" class="pagination">
     </el-pagination>
-    <el-dialog title="课程详情" :visible.sync="dialogTableVisible">
+    <el-dialog title="课程详情" :visible.sync="dialogTableVisible" width="75%">
       <div class="course-detail">
         <div class="detail-item">
           <ul>
@@ -83,16 +83,21 @@
           </ul>
         </div>
       </div>
-      <el-button type="danger"> 删除 </el-button>
-      <el-table :data="studentsData">
-        <el-table-column property="name" label="姓名"></el-table-column>
-        <el-table-column property="schoolId" label="学号"></el-table-column>
-        <el-table-column property="major" label="所在专业"></el-table-column>
-        <el-table-column label="课程评定">
+      <el-button type="danger" @click="delCourse"> 删除 </el-button>
+      <el-table :data="studentsData" v-loading="listLoading" stripe>
+        <el-table-column property="name" label="姓名" min-width="100"></el-table-column>
+        <el-table-column property="school_id" label="学号" min-width="100"></el-table-column>
+        <el-table-column property="major" label="所在专业" min-width="100"></el-table-column>
+        <el-table-column label="课程评定" min-width="100">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="handle(scope.$index, scope.row)">
-              通过
-            </el-button>
+            <div class="btn-group">
+              <el-button size="mini" type="success" @click="handle(scope.$index, scope.row)">
+                通过
+              </el-button>
+              <el-button size="mini" type="danger" @click="handle(scope.$index, scope.row)">
+                不及格
+              </el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -135,13 +140,24 @@
 .el-pagination {
   margin-top: 30px;
 }
+.btn-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  .el-button {
+    display: block;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-left: 0;
+  }
+}
 </style>
 
 
 <script>
 
 import { locationOptions, timeOptions, creditOptions, typeOptions, pageSize } from '../variable';
-import { getCourses, postSelect } from '../api';
+import { getCourses, getCourseDetail, postSelect, delCourse } from '../api';
 
 export default {
   props: {
@@ -158,6 +174,7 @@ export default {
     pageSize,
     totalCount: 0,
     dialogTableVisible: false,
+    activeIndex: null,
     tableData: [],
     studentsData: [],
     form: {
@@ -169,6 +186,7 @@ export default {
     },
     courseDetail: {},
     formLoading: false,
+    listLoading: false,
   }),
   async mounted() {
     await this.getCoursesData();
@@ -177,7 +195,9 @@ export default {
     async onClick(index, row) {
       if (this.checkAble) {
         this.dialogTableVisible = true;
+        this.activeIndex = index;
         this.courseDetail = row;
+        await this.getCourseDetail(row.id);
       } else {
         await this.postSelectCourse(row);
       }
@@ -205,6 +225,18 @@ export default {
         this.$alert('服务器错误，请稍候刷新重试', '提示', { type: 'error' });
       }
     },
+    async getCourseDetail(id) {
+      this.listLoading = true;
+      try {
+        console.log(id);
+        const data = await getCourseDetail(id);
+        this.studentsData = data.students;
+        this.listLoading = false;
+      } catch (e) {
+        this.listLoading = false;
+        this.$alert('服务器错误，请稍候刷新重试', '提示', { type: 'error' });
+      }
+    },
     async postSelectCourse(course) {
       try {
         await this.$confirm('你是否确定选修该节课堂?', '提示', { type: 'info' });
@@ -223,6 +255,29 @@ export default {
         }
       } catch (e) {
         this.$message({ type: 'info', message: '已取消选课' });
+      }
+    },
+    async delCourse() {
+      const { id } = this.courseDetail;
+      try {
+        await this.$confirm('你是否确定删除该节课堂?', '提示', { type: 'error' });
+        this.listLoading = true;
+        try {
+          const message = await delCourse(id);
+          this.listLoading = false;
+          if (message.success) {
+            this.$alert('删除成功', '提示');
+            this.dialogTableVisible = false;
+            this.tableData.splice(this.activeIndex, 1);
+          } else {
+            this.$alert('删除失败，请重试', '提示');
+          }
+        } catch (e) {
+          this.listLoading = false;
+          this.$alert('服务器错误，请稍候刷新重试', '提示', { type: 'error' });
+        }
+      } catch (e) {
+        this.$message({ type: 'info', message: '已取消删除' });
       }
     },
   },

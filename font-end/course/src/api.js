@@ -41,24 +41,6 @@ export const postLogout = async () => {
   }
 };
 
-export const getCourses = async (payload = {}) => {
-  let params = {
-    limit: pageSize,
-    offset: 0,
-  };
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value !== '') {
-      params = Object.assign(params, { [key]: value });
-    }
-  });
-  try {
-    const res = await axios.get('/courses', { params });
-    return res.data;
-  } catch (e) {
-    throw new Error('server login is failed');
-  }
-};
-
 export const getPassedCourses = async () => {
   try {
     const res = await axios.get('/user/passedcourses');
@@ -78,3 +60,38 @@ export const postSelect = async (courseId, select) => {
   }
 };
 
+export const getCourses = async (payload = {}) => {
+  let params = {
+    limit: pageSize,
+    offset: 0,
+  };
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== '') {
+      params = Object.assign(params, { [key]: value });
+    }
+  });
+  try {
+    const res = await axios.get('/courses', { params });
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const getCourseDetail = async (id) => {
+  try {
+    const res = await axios.get(`/courses/${id}`);
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const delCourse = async (id) => {
+  try {
+    const res = await axios.delete(`/courses/${id}`);
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};

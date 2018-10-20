@@ -23,7 +23,7 @@
         <el-button type="primary" class="btn">确定</el-button>
       </el-form>
     </el-dialog>
-    <el-dialog :visible.sync="formVisible">
+    <el-dialog :visible.sync="formVisible" width="75%">
       <el-form label-position="right">
         <el-form-item label="课程名称">
           <el-input placeholder="请输入名称" v-model="form.courseName" clearable />
