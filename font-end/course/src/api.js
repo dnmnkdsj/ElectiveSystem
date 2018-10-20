@@ -35,12 +35,10 @@ axios.interceptors.response.use(
 );
 
 export const postLogin = async (account, password) => {
-  const data = Object.assign({}, { schoolID: account, password });
+  const data = Object.assign({}, { schoolId: account, password });
   try {
     const res = await axios.post('/user/login', data);
-    console.log(res);
-    if (res.data.status !== 200) { throw new Error('server login is failed'); }
-    return res.data.message;
+    return res.data;
   } catch (e) {
     throw new Error('server login is failed');
   }
@@ -58,8 +56,7 @@ export const getCourses = async (payload = {}) => {
   });
   try {
     const res = await axios.get('/courses', { params });
-    if (res.data.status !== 200) { throw new Error('server login is failed'); }
-    return res.data.message;
+    return res.data;
   } catch (e) {
     throw new Error('server login is failed');
   }
@@ -69,8 +66,7 @@ export const postSelect = async (userId, courseId, select) => {
   const data = Object.assign({}, { user_id: userId, course_id: courseId, select });
   try {
     const res = await axios.post('/user/select', data);
-    if (res.data.status !== 200) { throw new Error('server login is failed'); }
-    return res.data.message;
+    return res.data;
   } catch (e) {
     throw new Error('server login is failed');
   }

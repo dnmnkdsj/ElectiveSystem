@@ -12,20 +12,19 @@ const { Random } = Mock;
 
 Mock.mock('/api/user/login', 'post', (req) => {
   const info = JSON.parse(req.body);
-  const { schoolID, password } = info;
-  if (schoolID && password && schoolID === password) {
+  const { schoolId, password } = info;
+  if (schoolId && password && schoolId === password) {
     return Mock.mock({
-      status: 200,
-      message: {
-        user: {
-          name: '@string(1,6)',
-          'id|0-99999': 1,
-          auth: 4,
-          schoolId: schoolID,
-        },
-        success: true,
-        token: 'adsfsdafsdfasdfsadfasdfasdfsadfsdf',
+      user: {
+        name: '@string(1,6)',
+        'id|0-99999': 1,
+        auth: 'admin',
+        major: 'computer',
+        schoolId,
       },
+      success: true,
+      token: 'adsfsdafsdfasdfsadfasdfasdfsadfsdf',
+
     });
   }
   return Mock.mock({

@@ -21,7 +21,9 @@ export const adminRoutes = [
   { path: '/admin', name: '管理课程' },
 ];
 
-export const authLevel = 5;
+export const authLevel = [
+  'student', 'admin',
+];
 
 
 export const codeAnswer = [

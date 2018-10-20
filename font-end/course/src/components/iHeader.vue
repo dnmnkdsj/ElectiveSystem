@@ -79,7 +79,8 @@ export default {
     ...mapGetters([storeKey.userKey]),
     tabs() {
       if (this.user) {
-        return this.user.auth >= authLevel ? adminRoutes : routes;
+        const index = authLevel.indexOf(this.user.auth);
+        return [routes, adminRoutes][index];
       }
       return [];
     },

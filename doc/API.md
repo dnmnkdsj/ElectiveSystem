@@ -1,226 +1,314 @@
-```
-以下所有response按这个格式， 只会描述message中的内容
-token在header的Authorization 字段
+FORMAT: 1A
 
-{
-	status:Number //按需求定状态码 常见是 200 401 404
-	message:{
-        
-	}
-}
-```
+# 选课系统接口文档
+选课系统后台接口  
+设计指导  
+RESTful API 设计指南：http://www.ruanyifeng.com/blog/2014/05/restful_api.html  
+API blueprint：https://apiblueprint.org/
 
+# Group 用户
+在用户Group下的api设计均没有显性的方式提交身份信息，包括进行查询，
+server将从每个报文的头部自动读取cookie来判断身份。
 
+## 登录 [POST /api/user/login]
 
++ Request (application/json)
 
+            {
+                "schoolId": "U2016777",
+                "password": "password"
+            }
 
++ Response 200 (application/json)
 
+    + Headers
 
-POST /api/user/login
+            token: "token"
 
-```json
-request
-{
-	account:
-    password:
-}
-message 
-{
-   success:true,//true表示通过 false表示密码错误
-   token: //JWT生成的
-   user:
-    {
-   		SchoolID:String //学号或工号 数据库需要设置为唯一
-   		name:String //学生名
-   		id：唯一 id号
-   		auth: Number//权限等级
-	}
-}
-```
+    + Body
 
+            {
+                "success":true,
+                "user":{
+                            "schoolId": "U2016777",
+                            "name": "学生姓名",
+                            "id": 123,
+                            "major": "computer",
+                            "auth": "admin"
+                        }
+            }
+    
+    + Schema
 
+            {
+                "auth": "admin 代表管理员， student 代表普通用户"
+                "success" : "true 表示登录成功，false表示登录失败，其他value均无效"
+            }
 
-POST /api/user/select 选课
+## 查询学生通过的课程 [GET /api/user/passedcourses/]
 
-```json
-request
-{
-	select:true //true为选修 false为退选 
-    user_id:
-    course_id:
-}
-message 
-{
-   success:true/false//true表示通过 false表示失败 课程不存在等
-}
-```
++ Response 200 (application/json)
 
+    + Body
 
+            {
+                "courses":[
+                    {
+                        "id": 123,
+                        "name": "python课程1",
+                        "credit": 2,
+                        "type": "科学",
+                        "limit": 45,
+                        "num_join": 30,
+                        "course_time": "周一",
+                        "course_location": "东九",
+                        "teacher": "老师",
+                        "addtion": "Python初级教学"
+                    },
+                    {
+                        "id": 124,
+                        "name": "python课程2",
+                        "credit": 2,
+                        "type": "科学",
+                        "limit": 45,
+                        "num_join": 30,
+                        "course_time": "周一",
+                        "course_location": "东九",
+                        "teacher": "老师",
+                        "addtion": "Python初级教学2"
+                    }],
+                "total": 2
+            }
 
+## 学生选课 [POST /api/user/select/]
 
++ Request (application/json)
 
-GET /api/courses 
+    + Body
+ 
+            {
+                "select": true 
+                "course_id": 2
+            }
 
-```json
-request
-{
-    limit:Number
-    offset:Number //参照数据库这两个关键字 这两个关键字必然存在 后面参数可能不存在
-    keyword:String
-    time:Number
-    credit:Number
-    location:String
-    type: String
-}
+    + Schema
 
-以上request的参数可能有的时候为空 按需搜索
-message 
-{
-    courses|0-limit:[ //按照搜索的顺序返回 如有limit返回上限数的数据 按create_time排序
-    {	
-		id:Number
-    	name:String
-    	credit:NUM
-    	type:String
-    	limit:NUM
-    	num_join:NUM
-    	course_time:String
-    	courese_location:String
-    	teacher:String
-    	addition：String
-	}]  
-	total:NUM //每次都需要统计总共符合条件的记录数
-}
+            {
+                "select": "true表示选修，false表示退选"
+            }
 
-request
-{
-    selected:true //当查询已修课程时 会有该参数 当存在该参数时下列response的message变化
-}
++ Response 200 (application/json)
+    
+    + Body
 
-以上request的参数可能有的时候为空 按需搜索
-message 
-{
-    courses|0-limit:[ //按照搜索的顺序返回 如有limit返回上限数的数据 按create_time排序
-    {	
-		id:Number
-    	name:String
-    	credit:NUM
-    	type:String
-    	limit:NUM
-    	num_join:NUM
-    	course_time:String
-    	courese_location:String
-    	teacher:String
-    	addition：String
-    	has_choosen :BOOL //true为正选 false为待抽签
-	}]  
-}
+            {
+                "success": true
+            }
 
-request
-{
-    user_id:NUM
-    finished:true //当查询已修课程时 会有该参数 当与selected共存时报错response的status改为404
-}
+    + Schema
 
-以上request的参数可能有的时候为空 按需搜索
-message 
-{
-    courses|0-limit:[ //按照搜索的顺序返回 如有limit返回上限数的数据 按create_time排序
-    {	
-		id:Number
-    	name:String
-    	credit:NUM
-    	type:String  	
-    	teacher:String
-	}]  
-}
-```
+            {
+                "success": "true表示通过，false表示失败、课程不存在等"
+            }
 
+## 更改密码 [POST /api/user/changepwd/] 
 
++ Request (application/json)
 
-GET /api/courses/:id  管理员获取单个课程列表
+    + Body
 
-```json
-request
-{
-    id:Number 课程ID
-}
+            {
+                "new_password": "newpass"
+            }
+    
+    + Schema
 
-message 
-{
-    course: 
-    {	
-		id:Number
-    	name:String
-    	credit:
-    	type:
-    	limit:
-    	num_join:
-    	course_time:
-    	courese_location:
-    	teacher:String
-        addition: String 备注
-	}
-    students:[{
-    	id:Number
-    	name:
-    	schoolID（工号或学号）:String
-	}]
-}
-```
+            {
+                "new_password": "最好所有的密码都填散列后的"
+            }
 
++ Response 200 (application/json)
 
+    + Body
 
+            {
+              "success": true
+            }
 
+# Group 课程 
 
-POST /api/courses  新建课程
+## 课程列表 [/api/courses/]
+课程列表下有两个方法，GET可以得到列表，POST仅一次添加一门课程。
 
-```json
-request
-{
-	limit:Number
-    num_join:Number
-    keyword:String
-    time:Number
-    credit:Number
-    location:0 1 2 3//0为东九 1为东十二
-    type: 0 1 2 //0是综合 1是人文 2是科学 3是艺术
-}
+### 查询课程 [GET]
 
-以上request的参数可能有的时候为空 按需搜索
-message 
-{
-    success:true/false
-}
-```
++ Request (application/json)
 
+    + Body
 
+            {
+                "limit": Number
+                "offset": Number //参照数据库这两个关键字 这两个关键字必然存在 后面参数可能不存在
+                "keyword": String
+                "time": Number
+                "credit": Number
+                "location": String
+                "type": String
+            }
 
+    + Schema
 
+            {
+                "imit": "Number",
+                "offset": "参照数据库这两个关键字 这两个关键字必然存在 后面参数可能不存在"
+            }
 
-DELETE /api/courses/:id 
++ Response 200 (application/json)
 
-```json
-request  //课程id 在url
-{
-    token:
-}
+    + Body
 
-message 
-{
-    success:ture/false
-}
-```
+            {
+                "courses":[
+                    {
+                        "id": 123,
+                        "name": "python课程1",
+                        "credit": 2,
+                        "type": "科学",
+                        "limit": 45,
+                        "num_join": 30,
+                        "course_time": "周一",
+                        "course_location": "东九",
+                        "teacher": "老师",
+                        "addtion": "Python初级教学"
+                    },
+                    {
+                        "id": 124,
+                        "name": "python课程2",
+                        "credit": 2,
+                        "type": "科学",
+                        "limit": 45,
+                        "num_join": 30,
+                        "course_time": "周一",
+                        "course_location": "东九",
+                        "teacher": "老师",
+                        "addtion": "Python初级教学2"
+                    }],
+                "total": 2
+            }
 
+    + Schema
 
+            {
+                "courses":"返回课程的list"
+                "course":{
+                    "id": "课程id",
+                    "type": "三种：人文、科学、综合",
+                    "course_time": "周一、周二……周日",
+                    "course_location": "东九、东十二、西十二",
+                    "limit": "人数上限",
+                    "num_join": "已加入人数",
+                    "credit": "Option: 1,1.5,2,2.5,3,3.5,4,4.5,5"
+                }
+            }
 
+### 新建课程 [POST]
+Response 400 if has no admin auth.
 
++ Request (application/json)
 
+    + Body
 
+            {
+                "name": "python课程1",
+                "credit": 2,
+                "type": "科学",
+                "limit": 45,
+                "num_join": 30,
+                "course_time": "周一",
+                "course_location": "东九",
+                "teacher": "老师",
+                "addtion": "Python初级教学"
+            }
 
++ Response 200 (application/json)
 
+    + Body
 
+            {
+                "success": true,
+                "course_id": 123
+            }
 
++ Response 400
 
+## 课程 [/api/course/{id}/]
 
++ Parameters
 
+    + id: 123 (number) - 课程id
+
+### 查询课程详情 [GET]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                course:{
+                    "id": 123,
+                    "name": "python课程1",
+                    "credit": 2,
+                    "type": "科学",
+                    "limit": 45,
+                    "num_join": 30,
+                    "course_time": "周一",
+                    "course_location": "东九",
+                    "teacher": "老师",
+                    "addtion": "Python初级教学"
+                },
+                students:[{
+                    "id": 12,
+                    "name": "学生1",
+                    "school_id": "U2016171"
+                },{
+                    "id": 13,
+                    "name": "学生2",
+                    "school_id": "U2016172"
+                }]
+            }
+
+### 删除一门课程 [DELETE]
+
++ Response 200 (application/json)
+
+    + Body
+
+            "success": true
+
+# Group 选课系统设置
+
+# 更新选课的开始、结束和抽签时间 [PUT /api/setup/times]
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "start_time": "2018-11-02,
+                "end_time": "2018-11-03,
+                "select_time": "2018-12-01
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            "success": true
+
+# 立即终止选课 [POST /api/setup/break]
+
++ Response 200 (application/json)
+
+    + Body
+
+            "success": true
