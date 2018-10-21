@@ -19,6 +19,7 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     user: null,
+    timeData: null,
     courseState: -1,
   },
   mutations: {
@@ -31,8 +32,9 @@ export default new Vuex.Store({
       state.user = null;
       localStorage.removeItem(storeKey.userKey);
     },
-    [storeType.CHANGE_STATE](state, newState) {
-      state.courseState = newState;
+    [storeType.CHANGE_STATE](state, { courseState, timeData }) {
+      state.courseState = courseState;
+      state.timeData = timeData;
     },
   },
   actions: {
@@ -49,6 +51,7 @@ export default new Vuex.Store({
   getters: {
     user: state => state.user,
     courseState: state => state.courseState,
+    timeData: state => state.timeData,
   },
 
   plugins: [searchHistory],

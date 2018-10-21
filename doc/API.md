@@ -95,6 +95,7 @@ server将从每个报文的头部自动读取cookie来判断身份。
                         "num_join": 35,
                         "credit": 2,
                         "in_course": true
+                        "state":"waiting"
                     },
                     {
                         "id": 124,
@@ -106,8 +107,13 @@ server将从每个报文的头部自动读取cookie来判断身份。
                         "num_join": 35,
                         "credit": 2,
                         "in_course": true
+                        "state":"selected"
                     }]
             }
+
+             + Schema
+
+            "state": "Option: waiting,selected"
 
 ## 学生选课 [POST /api/user/select/]
 
@@ -177,13 +183,13 @@ server将从每个报文的头部自动读取cookie来判断身份。
     + Body
 
             {
-                "limit": 10,
+                "limit": 10, //返回数据的上限条数
                 "offset": 7,
                 "keyword": "python",
                 "time": "周一",
                 "credit": 2,
                 "location": "东九",
-                "type": "科学"
+                "type": "科学",
             }
 
     + Schema
@@ -223,7 +229,7 @@ server将从每个报文的头部自动读取cookie来判断身份。
                         "teacher": "老师",
                         "addtion": "Python初级教学2"
                     }],
-                "total": 2
+                "total": 2  //分页用的 是所有符合条件的数据条数
             }
 
     + Schema
@@ -318,13 +324,10 @@ Response 400 if has no admin auth.
     + Body
 
             {
-                "students": [{
+                "student": {
                     "id": 12,
                     "state": "passed"
-                    },{
-                    "id": 13,
-                    "state": "undecided"
-                    }]
+                    }
             }
 
     + Schema
@@ -358,7 +361,7 @@ Response 400 if has no admin auth.
             {
                 "start_time": 1540029819000,
                 "end_time": 1540029824000,
-                "select_time": 1540029819000
+                "select_time": 1540029829000
             }
 
 ### 更新选课的开始、结束和抽签时间 [PUT]

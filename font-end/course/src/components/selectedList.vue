@@ -20,7 +20,7 @@
           <el-table-column prop="limit" label="最大容量">
           </el-table-column>
         </el-table-column>
-        <el-table-column prop="has_choosen" label="选课状态">
+        <el-table-column prop="state" label="选课状态">
         </el-table-column>
         <el-table-column label="退选">
           <template slot-scope="scope">
@@ -37,8 +37,7 @@
 
 
 <script>
-import { getCourses, postSelect } from '../api';
-import { chooseState } from '../variable';
+import { getSelectedCourses, postSelect } from '../api';
 
 export default {
   data: () => ({
@@ -74,11 +73,8 @@ export default {
   async mounted() {
     this.loading = true;
     try {
-      const data = await getCourses({ selected: true });
-      data.courses.forEach((element) => {
-        element.has_choosen = chooseState[element.has_choosen];
-      });
-      this.tableData = data.courses;
+      const data = await getSelectedCourses();
+      this.tableData = data;
       this.loading = false;
     } catch (e) {
       this.loading = false;

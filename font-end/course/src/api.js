@@ -1,6 +1,6 @@
 import Axios from 'axios';
-import { pageSize } from './variable';
-import { router } from './router';
+import { pageSize, chooseState, chooseStateEN, passedStateEN, passedState } from './variable';
+import router from './router';
 
 const axios = Axios.create({
   baseURL: '/api',
@@ -43,8 +43,22 @@ export const postLogout = async () => {
 
 export const getPassedCourses = async () => {
   try {
-    const res = await axios.get('/user/passedcourses');
+    const res = await axios.get('/user/courses/passed');
     return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const getSelectedCourses = async () => {
+  try {
+    const res = await axios.get('/user/courses/selected');
+    const { courses } = res.data;
+    courses.forEach((element) => {
+      const index = chooseStateEN.indexOf(element.state);
+      element.state = chooseState[index];
+    });
+    return courses;
   } catch (e) {
     throw new Error('server login is failed');
   }
@@ -81,7 +95,12 @@ export const getCourses = async (payload = {}) => {
 export const getCourseDetail = async (id) => {
   try {
     const res = await axios.get(`/courses/${id}`);
-    return res.data;
+    const { students } = res.data;
+    students.forEach((element) => {
+      const index = passedStateEN.indexOf(element.state);
+      element.state = passedState[index];
+    });
+    return students;
   } catch (e) {
     throw new Error('server login is failed');
   }
@@ -93,5 +112,56 @@ export const delCourse = async (id) => {
     return res.data;
   } catch (e) {
     throw new Error('server login is failed');
+  }
+};
+
+export const postNewCourse = async (payload) => {
+  try {
+    const res = await axios.post('/courses', payload);
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const postBreak = async () => {
+  try {
+    const res = await axios.post('/setup/break');
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const putTiming = async (data) => {
+  try {
+    const res = await axios.put('/setup/times', data);
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const postPass = async (studentId, courseId, state) => {
+  try {
+    state = passedStateEN[state];
+    const res = await axios.post(`/courses/${courseId}`, { student_id: studentId, state });
+    return res.data;
+  } catch (e) {
+    throw new Error('server login is failed');
+  }
+};
+
+export const getTiming = async () => {
+  try {
+    const res = await axios.get('setup/times');
+    const { data } = res;
+    const now = Date.now();
+    let courseState = now < data.start_time ? 0 : 1;
+    courseState = now < data.end_time ? courseState : 2;
+    const result = { timeData: data, courseState };
+    return result;
+  } catch (e) {
+    throw new Error('server is failed');
   }
 };

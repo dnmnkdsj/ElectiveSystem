@@ -30,6 +30,44 @@ export const codeAnswer = [
   'dgks', 'uqdo',
 ];
 
+export const newCourseRules = {
+  name: [
+    { required: true, message: '请输入课程名称', trigger: 'blur' },
+  ],
+  teacher: [
+    { required: true, message: '请输入授课老师名字', trigger: 'blur' },
+  ],
+  course_location: [
+    { required: true, message: '请选择上课地点', trigger: 'change' },
+  ],
+  course_time: [
+    { required: true, message: '请选择上课时间', trigger: 'change' },
+  ],
+  credit: [
+    { required: true, message: '请选择课程学分', trigger: 'change' },
+  ],
+  type: [
+    { required: true, message: '请选择课程分类', trigger: 'change' },
+  ],
+  limit: [
+    { required: true, message: '请输入上课上限人数', trigger: 'change' },
+  ],
+
+};
+
+
+export const timeRules = {
+  start_time: [
+    { required: true, message: '请设置开始时间', trigger: 'change' },
+  ],
+  end_time: [
+    { required: true, message: '请设置结束时间', trigger: 'change' },
+  ],
+  select_time: [
+    { required: true, message: '请设置抽签时间', trigger: 'change' },
+  ],
+
+};
 // client customization
 
 export const color = {
@@ -69,3 +107,14 @@ export const chooseState = [
   '待抽签', '正选',
 ];
 
+export const chooseStateEN = [
+  'waiting', 'selected',
+];
+
+export const passedState = [
+  '待评定', '通过', '不及格',
+];
+
+export const passedStateEN = [
+  'undecided', 'passed', 'failed',
+];
